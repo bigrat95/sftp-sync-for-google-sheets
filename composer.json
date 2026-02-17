@@ -1,0 +1,24 @@
+{
+    "name": "olivierbigras/gsheet-sftp-sync",
+    "description": "WordPress plugin to receive Google Sheets exports and upload to SFTP server",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Olivier Bigras",
+            "homepage": "https://olivierbigras.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "phpseclib/phpseclib": "~3.0"
+    },
+    "autoload": {
+        "classmap": [
+            "includes/"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

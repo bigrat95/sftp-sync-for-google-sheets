@@ -1,0 +1,18 @@
+# Logs
+logs/*.log
+
+# Composer
+vendor/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local config
+.env
