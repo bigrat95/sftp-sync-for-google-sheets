@@ -5,7 +5,7 @@ Plugin URI: https://olivierbigras.com
 Tags: google sheets, sftp, sync, automation, csv
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -84,6 +84,10 @@ Yes! Each Google Sheet can have its own Apps Script. They can all point to the s
 
 == Changelog ==
 
+= 1.3.1 =
+* Removed hidden files (.htaccess) for WordPress.org plugin directory compliance
+* Logs directory now protected by index.php only (no .htaccess needed)
+
 = 1.3.0 =
 * Fixed CSV export: Now uses Google's native CSV export instead of manual CSV building
 * This fixes WP All Import not recognizing CSV headers
@@ -115,6 +119,9 @@ Yes! Each Google Sheet can have its own Apps Script. They can all point to the s
 * Google Apps Script generator
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+WordPress.org plugin directory compliance fixes.
 
 = 1.3.0 =
 Fixes CSV header detection in WP All Import. Re-copy the Google Apps Script after updating.
