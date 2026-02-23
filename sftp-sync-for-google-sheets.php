@@ -1,27 +1,27 @@
 <?php
 /**
- * Plugin Name: GSheet SFTP Sync
- * Plugin URI: https://github.com/bigrat95/gsheet-sftp-sync/
- * Description: Receive Google Sheets exports via API and upload to SFTP server. Perfect for automated daily syncs from Google Sheets to your server.
- * Version: 1.3.1
+ * Plugin Name: SFTP Sync for Google Sheets
+ * Plugin URI: https://github.com/bigrat95/sftp-sync-for-google-sheets/
+ * Description: Receive Google Sheets exports via API and upload to SFTP server. Automate daily syncs from Google Sheets to your server.
+ * Version: 1.4.0
  * Requires at least: 5.0
  * Requires PHP: 7.4
  * Author: Olivier Bigras
  * Author URI: https://olivierbigras.com
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: gsheet-sftp-sync
+ * Text Domain: sftp-sync-for-google-sheets
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-define('GSHEET_SFTP_SYNC_VERSION', '1.3.1');
-define('GSHEET_SFTP_SYNC_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('GSHEET_SFTP_SYNC_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('SFTP_SYNC_GS_VERSION', '1.4.0');
+define('SFTP_SYNC_GS_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('SFTP_SYNC_GS_PLUGIN_URL', plugin_dir_url(__FILE__));
 
-class GSheet_SFTP_Sync {
+class SFTP_Sync_GS {
     
     private static $instance = null;
     
@@ -38,9 +38,9 @@ class GSheet_SFTP_Sync {
     }
     
     private function load_dependencies() {
-        require_once GSHEET_SFTP_SYNC_PLUGIN_DIR . 'includes/class-admin-settings.php';
-        require_once GSHEET_SFTP_SYNC_PLUGIN_DIR . 'includes/class-sftp-handler.php';
-        require_once GSHEET_SFTP_SYNC_PLUGIN_DIR . 'includes/class-api-endpoint.php';
+        require_once SFTP_SYNC_GS_PLUGIN_DIR . 'includes/class-admin-settings.php';
+        require_once SFTP_SYNC_GS_PLUGIN_DIR . 'includes/class-sftp-handler.php';
+        require_once SFTP_SYNC_GS_PLUGIN_DIR . 'includes/class-api-endpoint.php';
     }
     
     private function init_hooks() {
@@ -60,7 +60,7 @@ class GSheet_SFTP_Sync {
         }
         
         // Create logs directory
-        $log_dir = GSHEET_SFTP_SYNC_PLUGIN_DIR . 'logs';
+        $log_dir = SFTP_SYNC_GS_PLUGIN_DIR . 'logs';
         if (!file_exists($log_dir)) {
             wp_mkdir_p($log_dir);
         }
@@ -74,24 +74,24 @@ class GSheet_SFTP_Sync {
     
     public function add_admin_menu() {
         add_options_page(
-            __('GSheet SFTP Sync', 'gsheet-sftp-sync'),
-            __('GSheet SFTP Sync', 'gsheet-sftp-sync'),
+            esc_html__('SFTP Sync for Google Sheets', 'sftp-sync-for-google-sheets'),
+            esc_html__('SFTP Sync', 'sftp-sync-for-google-sheets'),
             'manage_options',
-            'gsheet-sftp-sync',
-            [GSheet_SFTP_Admin_Settings::get_instance(), 'render_settings_page']
+            'sftp-sync-for-google-sheets',
+            [SFTP_Sync_GS_Admin_Settings::get_instance(), 'render_settings_page']
         );
     }
     
     public function register_settings() {
-        GSheet_SFTP_Admin_Settings::get_instance()->register_settings();
+        SFTP_Sync_GS_Admin_Settings::get_instance()->register_settings();
     }
     
     public function register_rest_routes() {
-        GSheet_SFTP_API_Endpoint::get_instance()->register_routes();
+        SFTP_Sync_GS_API_Endpoint::get_instance()->register_routes();
     }
     
     public function admin_styles($hook) {
-        if ($hook !== 'settings_page_gsheet-sftp-sync') {
+        if ($hook !== 'settings_page_sftp-sync-for-google-sheets') {
             return;
         }
         wp_add_inline_style('wp-admin', '
@@ -108,7 +108,7 @@ class GSheet_SFTP_Sync {
     }
     
     public static function log($message, $type = 'info') {
-        $log_file = GSHEET_SFTP_SYNC_PLUGIN_DIR . 'logs/sync.log';
+        $log_file = SFTP_SYNC_GS_PLUGIN_DIR . 'logs/sync.log';
         $timestamp = current_time('Y-m-d H:i:s');
         $log_entry = "[{$timestamp}] [{$type}] {$message}\n";
         file_put_contents($log_file, $log_entry, FILE_APPEND | LOCK_EX);
@@ -122,7 +122,7 @@ class GSheet_SFTP_Sync {
     }
     
     public static function get_logs($limit = 50) {
-        $log_file = GSHEET_SFTP_SYNC_PLUGIN_DIR . 'logs/sync.log';
+        $log_file = SFTP_SYNC_GS_PLUGIN_DIR . 'logs/sync.log';
         if (!file_exists($log_file)) {
             return [];
         }
@@ -132,4 +132,4 @@ class GSheet_SFTP_Sync {
 }
 
 // Initialize the plugin
-GSheet_SFTP_Sync::get_instance();
+SFTP_Sync_GS::get_instance();

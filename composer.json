@@ -1,5 +1,5 @@
 {
-    "name": "olivierbigras/gsheet-sftp-sync",
+    "name": "olivierbigras/sftp-sync-for-google-sheets",
     "description": "WordPress plugin to receive Google Sheets exports and upload to SFTP server",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",

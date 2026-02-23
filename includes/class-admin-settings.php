@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class GSheet_SFTP_Admin_Settings {
+class SFTP_Sync_GS_Admin_Settings {
     
     private static $instance = null;
     
@@ -118,16 +118,16 @@ class GSheet_SFTP_Admin_Settings {
         // Handle regenerate API key
         if (isset($_POST['regenerate_api_key']) && check_admin_referer('gsheet_sftp_regenerate_key')) {
             update_option('gsheet_sftp_api_key', wp_generate_password(32, false));
-            echo '<div class="notice notice-success"><p>' . __('API key regenerated successfully!', 'gsheet-sftp-sync') . '</p></div>';
+            echo '<div class="notice notice-success"><p>' . esc_html__('API key regenerated successfully!', 'sftp-sync-for-google-sheets') . '</p></div>';
         }
         
         // Handle clear logs
         if (isset($_POST['clear_logs']) && check_admin_referer('gsheet_sftp_clear_logs')) {
-            $log_file = GSHEET_SFTP_SYNC_PLUGIN_DIR . 'logs/sync.log';
+            $log_file = SFTP_SYNC_GS_PLUGIN_DIR . 'logs/sync.log';
             if (file_exists($log_file)) {
                 unlink($log_file);
             }
-            echo '<div class="notice notice-success"><p>' . __('Logs cleared!', 'gsheet-sftp-sync') . '</p></div>';
+            echo '<div class="notice notice-success"><p>' . esc_html__('Logs cleared!', 'sftp-sync-for-google-sheets') . '</p></div>';
         }
         
         $api_key = get_option('gsheet_sftp_api_key', '');
@@ -137,30 +137,30 @@ class GSheet_SFTP_Admin_Settings {
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
             
             <div class="gsheet-sftp-section">
-                <h2><?php _e('API Endpoint Information', 'gsheet-sftp-sync'); ?></h2>
-                <p><?php _e('Use these details in your Google Apps Script:', 'gsheet-sftp-sync'); ?></p>
+                <h2><?php esc_html_e('API Endpoint Information', 'sftp-sync-for-google-sheets'); ?></h2>
+                <p><?php esc_html_e('Use these details in your Google Apps Script:', 'sftp-sync-for-google-sheets'); ?></p>
                 
                 <table class="form-table">
                     <tr>
-                        <th><?php _e('Endpoint URL', 'gsheet-sftp-sync'); ?></th>
+                        <th><?php esc_html_e('Endpoint URL', 'sftp-sync-for-google-sheets'); ?></th>
                         <td>
                             <code class="gsheet-sftp-endpoint"><?php echo esc_url($endpoint_url); ?></code>
                             <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('<?php echo esc_js($endpoint_url); ?>')">
-                                <?php _e('Copy', 'gsheet-sftp-sync'); ?>
+                                <?php esc_html_e('Copy', 'sftp-sync-for-google-sheets'); ?>
                             </button>
                         </td>
                     </tr>
                     <tr>
-                        <th><?php _e('API Key', 'gsheet-sftp-sync'); ?></th>
+                        <th><?php esc_html_e('API Key', 'sftp-sync-for-google-sheets'); ?></th>
                         <td>
                             <code class="gsheet-sftp-api-key"><?php echo esc_html($api_key); ?></code>
                             <button type="button" class="button button-small" onclick="navigator.clipboard.writeText('<?php echo esc_js($api_key); ?>')">
-                                <?php _e('Copy', 'gsheet-sftp-sync'); ?>
+                                <?php esc_html_e('Copy', 'sftp-sync-for-google-sheets'); ?>
                             </button>
                             <form method="post" style="display: inline; margin-left: 10px;">
                                 <?php wp_nonce_field('gsheet_sftp_regenerate_key'); ?>
-                                <button type="submit" name="regenerate_api_key" class="button button-small" onclick="return confirm('<?php _e('Are you sure? You will need to update your Google Apps Script.', 'gsheet-sftp-sync'); ?>')">
-                                    <?php _e('Regenerate', 'gsheet-sftp-sync'); ?>
+                                <button type="submit" name="regenerate_api_key" class="button button-small" onclick="return confirm('<?php echo esc_js(__('Are you sure? You will need to update your Google Apps Script.', 'sftp-sync-for-google-sheets')); ?>')">
+                                    <?php esc_html_e('Regenerate', 'sftp-sync-for-google-sheets'); ?>
                                 </button>
                             </form>
                         </td>
@@ -172,11 +172,11 @@ class GSheet_SFTP_Admin_Settings {
                 <?php settings_fields('gsheet_sftp_settings'); ?>
                 
                 <div class="gsheet-sftp-section">
-                    <h2><?php _e('SFTP Server Settings', 'gsheet-sftp-sync'); ?></h2>
+                    <h2><?php esc_html_e('SFTP Server Settings', 'sftp-sync-for-google-sheets'); ?></h2>
                     
                     <table class="form-table">
                         <tr>
-                            <th><label for="gsheet_sftp_host"><?php _e('SFTP Host', 'gsheet-sftp-sync'); ?></label></th>
+                            <th><label for="gsheet_sftp_host"><?php esc_html_e('SFTP Host', 'sftp-sync-for-google-sheets'); ?></label></th>
                             <td>
                                 <input type="text" id="gsheet_sftp_host" name="gsheet_sftp_host" 
                                        value="<?php echo esc_attr(get_option('gsheet_sftp_host', '')); ?>" 
@@ -184,7 +184,7 @@ class GSheet_SFTP_Admin_Settings {
                             </td>
                         </tr>
                         <tr>
-                            <th><label for="gsheet_sftp_port"><?php _e('SFTP Port', 'gsheet-sftp-sync'); ?></label></th>
+                            <th><label for="gsheet_sftp_port"><?php esc_html_e('SFTP Port', 'sftp-sync-for-google-sheets'); ?></label></th>
                             <td>
                                 <input type="number" id="gsheet_sftp_port" name="gsheet_sftp_port" 
                                        value="<?php echo esc_attr(get_option('gsheet_sftp_port', 22)); ?>" 
@@ -192,7 +192,7 @@ class GSheet_SFTP_Admin_Settings {
                             </td>
                         </tr>
                         <tr>
-                            <th><label for="gsheet_sftp_username"><?php _e('Username', 'gsheet-sftp-sync'); ?></label></th>
+                            <th><label for="gsheet_sftp_username"><?php esc_html_e('Username', 'sftp-sync-for-google-sheets'); ?></label></th>
                             <td>
                                 <input type="text" id="gsheet_sftp_username" name="gsheet_sftp_username" 
                                        value="<?php echo esc_attr(get_option('gsheet_sftp_username', '')); ?>" 
@@ -200,42 +200,42 @@ class GSheet_SFTP_Admin_Settings {
                             </td>
                         </tr>
                         <tr>
-                            <th><label for="gsheet_sftp_password"><?php _e('Password', 'gsheet-sftp-sync'); ?></label></th>
+                            <th><label for="gsheet_sftp_password"><?php esc_html_e('Password', 'sftp-sync-for-google-sheets'); ?></label></th>
                             <td>
                                 <input type="password" id="gsheet_sftp_password" name="gsheet_sftp_password" 
                                        value="" class="regular-text" autocomplete="new-password"
                                        placeholder="<?php echo get_option('gsheet_sftp_password') ? '••••••••' : ''; ?>">
-                                <p class="description"><?php _e('Leave blank to keep existing password.', 'gsheet-sftp-sync'); ?></p>
+                                <p class="description"><?php esc_html_e('Leave blank to keep existing password.', 'sftp-sync-for-google-sheets'); ?></p>
                             </td>
                         </tr>
                         <tr>
-                            <th><label for="gsheet_sftp_remote_path"><?php _e('Remote Path', 'gsheet-sftp-sync'); ?></label></th>
+                            <th><label for="gsheet_sftp_remote_path"><?php esc_html_e('Remote Path', 'sftp-sync-for-google-sheets'); ?></label></th>
                             <td>
                                 <input type="text" id="gsheet_sftp_remote_path" name="gsheet_sftp_remote_path" 
                                        value="<?php echo esc_attr(get_option('gsheet_sftp_remote_path', '/')); ?>" 
                                        class="regular-text" placeholder="/path/to/uploads/">
-                                <p class="description"><?php _e('Directory where files will be uploaded. Must end with /', 'gsheet-sftp-sync'); ?></p>
+                                <p class="description"><?php esc_html_e('Directory where files will be uploaded. Must end with /', 'sftp-sync-for-google-sheets'); ?></p>
                             </td>
                         </tr>
                     </table>
                 </div>
                 
                 <div class="gsheet-sftp-section">
-                    <h2><?php _e('Export Settings', 'gsheet-sftp-sync'); ?></h2>
-                    <p><?php _e('Configure how the Google Sheet export works. These settings are embedded in the generated Apps Script.', 'gsheet-sftp-sync'); ?></p>
+                    <h2><?php esc_html_e('Export Settings', 'sftp-sync-for-google-sheets'); ?></h2>
+                    <p><?php esc_html_e('Configure how the Google Sheet export works. These settings are embedded in the generated Apps Script.', 'sftp-sync-for-google-sheets'); ?></p>
                     
                     <table class="form-table">
                         <tr>
-                            <th><label for="gsheet_sftp_schedule"><?php _e('Schedule', 'gsheet-sftp-sync'); ?></label></th>
+                            <th><label for="gsheet_sftp_schedule"><?php esc_html_e('Schedule', 'sftp-sync-for-google-sheets'); ?></label></th>
                             <td>
                                 <select id="gsheet_sftp_schedule" name="gsheet_sftp_schedule">
-                                    <option value="daily" <?php selected(get_option('gsheet_sftp_schedule', 'daily'), 'daily'); ?>><?php _e('Daily', 'gsheet-sftp-sync'); ?></option>
-                                    <option value="hourly" <?php selected(get_option('gsheet_sftp_schedule', 'daily'), 'hourly'); ?>><?php _e('Hourly', 'gsheet-sftp-sync'); ?></option>
+                                    <option value="daily" <?php selected(get_option('gsheet_sftp_schedule', 'daily'), 'daily'); ?>><?php esc_html_e('Daily', 'sftp-sync-for-google-sheets'); ?></option>
+                                    <option value="hourly" <?php selected(get_option('gsheet_sftp_schedule', 'daily'), 'hourly'); ?>><?php esc_html_e('Hourly', 'sftp-sync-for-google-sheets'); ?></option>
                                 </select>
                             </td>
                         </tr>
                         <tr id="daily-hour-row">
-                            <th><label for="gsheet_sftp_daily_hour"><?php _e('Daily Export Hour', 'gsheet-sftp-sync'); ?></label></th>
+                            <th><label for="gsheet_sftp_daily_hour"><?php esc_html_e('Daily Export Hour', 'sftp-sync-for-google-sheets'); ?></label></th>
                             <td>
                                 <select id="gsheet_sftp_daily_hour" name="gsheet_sftp_daily_hour">
                                     <?php for ($h = 0; $h < 24; $h++): ?>
@@ -244,33 +244,33 @@ class GSheet_SFTP_Admin_Settings {
                                     </option>
                                     <?php endfor; ?>
                                 </select>
-                                <p class="description"><?php _e('Hour of day to run export (in your timezone).', 'gsheet-sftp-sync'); ?></p>
+                                <p class="description"><?php esc_html_e('Hour of day to run export (in your timezone).', 'sftp-sync-for-google-sheets'); ?></p>
                             </td>
                         </tr>
                         <tr>
-                            <th><label for="gsheet_sftp_filename_mode"><?php _e('Filename Mode', 'gsheet-sftp-sync'); ?></label></th>
+                            <th><label for="gsheet_sftp_filename_mode"><?php esc_html_e('Filename Mode', 'sftp-sync-for-google-sheets'); ?></label></th>
                             <td>
                                 <select id="gsheet_sftp_filename_mode" name="gsheet_sftp_filename_mode">
-                                    <option value="dated" <?php selected(get_option('gsheet_sftp_filename_mode', 'dated'), 'dated'); ?>><?php _e('Dated (new file each export)', 'gsheet-sftp-sync'); ?></option>
-                                    <option value="overwrite" <?php selected(get_option('gsheet_sftp_filename_mode', 'dated'), 'overwrite'); ?>><?php _e('Overwrite (same filename)', 'gsheet-sftp-sync'); ?></option>
+                                    <option value="dated" <?php selected(get_option('gsheet_sftp_filename_mode', 'dated'), 'dated'); ?>><?php esc_html_e('Dated (new file each export)', 'sftp-sync-for-google-sheets'); ?></option>
+                                    <option value="overwrite" <?php selected(get_option('gsheet_sftp_filename_mode', 'dated'), 'overwrite'); ?>><?php esc_html_e('Overwrite (same filename)', 'sftp-sync-for-google-sheets'); ?></option>
                                 </select>
                                 <p class="description">
-                                    <strong><?php _e('Dated:', 'gsheet-sftp-sync'); ?></strong> <?php _e('Creates files like sheet_export_2026-01-07_120000.csv', 'gsheet-sftp-sync'); ?><br>
-                                    <strong><?php _e('Overwrite:', 'gsheet-sftp-sync'); ?></strong> <?php _e('Always uses the same filename, replacing the previous file', 'gsheet-sftp-sync'); ?>
+                                    <strong><?php esc_html_e('Dated:', 'sftp-sync-for-google-sheets'); ?></strong> <?php esc_html_e('Creates files like sheet_export_2026-01-07_120000.csv', 'sftp-sync-for-google-sheets'); ?><br>
+                                    <strong><?php esc_html_e('Overwrite:', 'sftp-sync-for-google-sheets'); ?></strong> <?php esc_html_e('Always uses the same filename, replacing the previous file', 'sftp-sync-for-google-sheets'); ?>
                                 </p>
                             </td>
                         </tr>
                         <tr>
-                            <th><label for="gsheet_sftp_base_filename"><?php _e('Base Filename', 'gsheet-sftp-sync'); ?></label></th>
+                            <th><label for="gsheet_sftp_base_filename"><?php esc_html_e('Base Filename', 'sftp-sync-for-google-sheets'); ?></label></th>
                             <td>
                                 <input type="text" id="gsheet_sftp_base_filename" name="gsheet_sftp_base_filename" 
                                        value="<?php echo esc_attr(get_option('gsheet_sftp_base_filename', 'sheet_export')); ?>" 
                                        class="regular-text" placeholder="sheet_export">
-                                <p class="description"><?php _e('Base name for exported files (without extension).', 'gsheet-sftp-sync'); ?></p>
+                                <p class="description"><?php esc_html_e('Base name for exported files (without extension).', 'sftp-sync-for-google-sheets'); ?></p>
                             </td>
                         </tr>
                         <tr>
-                            <th><label for="gsheet_sftp_export_format"><?php _e('Export Format', 'gsheet-sftp-sync'); ?></label></th>
+                            <th><label for="gsheet_sftp_export_format"><?php esc_html_e('Export Format', 'sftp-sync-for-google-sheets'); ?></label></th>
                             <td>
                                 <select id="gsheet_sftp_export_format" name="gsheet_sftp_export_format">
                                     <option value="csv" <?php selected(get_option('gsheet_sftp_export_format', 'csv'), 'csv'); ?>>CSV</option>
@@ -281,7 +281,7 @@ class GSheet_SFTP_Admin_Settings {
                     </table>
                 </div>
                 
-                <?php submit_button(__('Save Settings', 'gsheet-sftp-sync')); ?>
+                <?php submit_button(esc_html__('Save Settings', 'sftp-sync-for-google-sheets')); ?>
             </form>
             
             <script>
@@ -294,29 +294,29 @@ class GSheet_SFTP_Admin_Settings {
             </script>
             
             <div class="gsheet-sftp-section">
-                <h2><?php _e('Test Connection', 'gsheet-sftp-sync'); ?></h2>
-                <p><?php _e('Test your SFTP connection with the current settings.', 'gsheet-sftp-sync'); ?></p>
+                <h2><?php esc_html_e('Test Connection', 'sftp-sync-for-google-sheets'); ?></h2>
+                <p><?php esc_html_e('Test your SFTP connection with the current settings.', 'sftp-sync-for-google-sheets'); ?></p>
                 <form method="post">
                     <?php wp_nonce_field('gsheet_sftp_test_connection'); ?>
                     <button type="submit" name="test_sftp_connection" class="button button-secondary">
-                        <?php _e('Test SFTP Connection', 'gsheet-sftp-sync'); ?>
+                        <?php esc_html_e('Test SFTP Connection', 'sftp-sync-for-google-sheets'); ?>
                     </button>
                 </form>
             </div>
             
             <div class="gsheet-sftp-section">
-                <h2><?php _e('Recent Logs', 'gsheet-sftp-sync'); ?></h2>
+                <h2><?php esc_html_e('Recent Logs', 'sftp-sync-for-google-sheets'); ?></h2>
                 <form method="post" style="margin-bottom: 10px;">
                     <?php wp_nonce_field('gsheet_sftp_clear_logs'); ?>
                     <button type="submit" name="clear_logs" class="button button-small">
-                        <?php _e('Clear Logs', 'gsheet-sftp-sync'); ?>
+                        <?php esc_html_e('Clear Logs', 'sftp-sync-for-google-sheets'); ?>
                     </button>
                 </form>
                 <div class="gsheet-sftp-logs">
                     <?php
-                    $logs = GSheet_SFTP_Sync::get_logs(50);
+                    $logs = SFTP_Sync_GS::get_logs(50);
                     if (empty($logs)) {
-                        echo '<span class="log-info">' . __('No logs yet.', 'gsheet-sftp-sync') . '</span>';
+                        echo '<span class="log-info">' . esc_html__('No logs yet.', 'sftp-sync-for-google-sheets') . '</span>';
                     } else {
                         foreach ($logs as $log) {
                             $class = 'log-info';
@@ -333,10 +333,10 @@ class GSheet_SFTP_Admin_Settings {
             </div>
             
             <div class="gsheet-sftp-section">
-                <h2><?php _e('Google Apps Script', 'gsheet-sftp-sync'); ?></h2>
-                <p><?php _e('Copy the code below into your Google Sheet\'s Apps Script editor (Extensions → Apps Script):', 'gsheet-sftp-sync'); ?></p>
+                <h2><?php esc_html_e('Google Apps Script', 'sftp-sync-for-google-sheets'); ?></h2>
+                <p><?php esc_html_e('Copy the code below into your Google Sheet\'s Apps Script editor (Extensions → Apps Script):', 'sftp-sync-for-google-sheets'); ?></p>
                 <p><a href="#" onclick="document.getElementById('apps-script-code').style.display='block'; this.style.display='none'; return false;" class="button">
-                    <?php _e('Show Google Apps Script Code', 'gsheet-sftp-sync'); ?>
+                    <?php esc_html_e('Show Google Apps Script Code', 'sftp-sync-for-google-sheets'); ?>
                 </a></p>
                 <textarea id="apps-script-code" style="display:none; width:100%; height:400px; font-family:monospace; font-size:12px;" readonly><?php echo esc_textarea($this->get_apps_script_template()); ?></textarea>
             </div>
@@ -345,15 +345,15 @@ class GSheet_SFTP_Admin_Settings {
     }
     
     private function test_connection() {
-        $handler = GSheet_SFTP_Handler::get_instance();
+        $handler = SFTP_Sync_GS_Handler::get_instance();
         $result = $handler->test_connection();
         
         if ($result['success']) {
             echo '<div class="notice notice-success"><p>' . esc_html($result['message']) . '</p></div>';
-            GSheet_SFTP_Sync::log('SFTP connection test successful', 'success');
+            SFTP_Sync_GS::log('SFTP connection test successful', 'success');
         } else {
             echo '<div class="notice notice-error"><p>' . esc_html($result['message']) . '</p></div>';
-            GSheet_SFTP_Sync::log('SFTP connection test failed: ' . $result['message'], 'error');
+            SFTP_Sync_GS::log('SFTP connection test failed: ' . $result['message'], 'error');
         }
     }
     
@@ -369,7 +369,7 @@ class GSheet_SFTP_Admin_Settings {
         
         $script = "/**\n";
         $script .= " * Google Apps Script - Export Sheet to WordPress SFTP Plugin\n";
-        $script .= " * Generated by GSheet SFTP Sync Plugin\n";
+        $script .= " * Generated by SFTP Sync for Google Sheets Plugin\n";
         $script .= " * \n";
         $script .= " * After pasting this code:\n";
         $script .= " * 1. Save the project (Ctrl+S)\n";

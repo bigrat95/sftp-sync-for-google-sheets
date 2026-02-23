@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class GSheet_SFTP_Handler {
+class SFTP_Sync_GS_Handler {
     
     private static $instance = null;
     
@@ -19,7 +19,7 @@ class GSheet_SFTP_Handler {
             'host' => get_option('gsheet_sftp_host', ''),
             'port' => (int) get_option('gsheet_sftp_port', 22),
             'username' => get_option('gsheet_sftp_username', ''),
-            'password' => GSheet_SFTP_Admin_Settings::get_password(),
+            'password' => SFTP_Sync_GS_Admin_Settings::get_password(),
             'remote_path' => get_option('gsheet_sftp_remote_path', '/'),
         ];
     }
@@ -104,7 +104,7 @@ class GSheet_SFTP_Handler {
     private function upload_via_phpseclib($file_content, $filename, $config, $remote_path) {
         // Try to load phpseclib
         $autoload_paths = [
-            GSHEET_SFTP_SYNC_PLUGIN_DIR . 'vendor/autoload.php',
+            SFTP_SYNC_GS_PLUGIN_DIR . 'vendor/autoload.php',
             ABSPATH . 'vendor/autoload.php',
             WP_CONTENT_DIR . '/vendor/autoload.php',
         ];
@@ -234,7 +234,7 @@ class GSheet_SFTP_Handler {
         
         // Try phpseclib
         $autoload_paths = [
-            GSHEET_SFTP_SYNC_PLUGIN_DIR . 'vendor/autoload.php',
+            SFTP_SYNC_GS_PLUGIN_DIR . 'vendor/autoload.php',
             ABSPATH . 'vendor/autoload.php',
         ];
         

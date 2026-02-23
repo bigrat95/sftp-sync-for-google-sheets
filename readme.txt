@@ -1,20 +1,20 @@
-=== GSheet SFTP Sync ===
+=== SFTP Sync for Google Sheets ===
 Contributors: bigrat95
 Donate link: https://olivierbigras.com
 Plugin URI: https://olivierbigras.com
 Tags: google sheets, sftp, sync, automation, csv
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Automatically receive Google Sheets exports and upload them to your SFTP server. Perfect for daily automated syncs.
+Automatically receive Google Sheets exports and upload them to your SFTP server. Supports daily automated syncs.
 
 == Description ==
 
-GSheet SFTP Sync allows you to automatically export Google Sheets and upload them to any SFTP server. This is perfect for:
+SFTP Sync for Google Sheets allows you to automatically export Google Sheets and upload them to any SFTP server. Use cases include:
 
 * Daily inventory updates from Google Sheets
 * Automated data feeds for e-commerce
@@ -29,7 +29,7 @@ GSheet SFTP Sync allows you to automatically export Google Sheets and upload the
 * **SFTP Upload** – Automatically uploads to your SFTP server
 * **Activity Logs** – Track all uploads and errors
 * **Pre-built Script** – Copy-paste Google Apps Script included
-* **100% Free** – No paid services required
+* **No paid services required** – Uses Google Apps Script and your SFTP server
 
 **How It Works:**
 
@@ -41,9 +41,9 @@ GSheet SFTP Sync allows you to automatically export Google Sheets and upload the
 
 == Installation ==
 
-1. Upload the `gsheet-sftp-sync` folder to `/wp-content/plugins/`
+1. Upload the `sftp-sync-for-google-sheets` folder to `/wp-content/plugins/`
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to Settings → GSheet SFTP Sync
+3. Go to Settings → SFTP Sync
 4. Enter your SFTP server credentials
 5. Click "Test SFTP Connection" to verify
 6. Copy the Google Apps Script from the settings page
@@ -56,9 +56,9 @@ GSheet SFTP Sync allows you to automatically export Google Sheets and upload the
 
 The plugin supports both the PHP ssh2 extension and phpseclib. If neither is available, you can install phpseclib via Composer.
 
-= Is this really 100% free? =
+= Are there any costs? =
 
-Yes! This solution uses Google Apps Script (free) and your existing SFTP server. No third-party paid services required.
+This solution uses Google Apps Script and your existing SFTP server. No third-party paid services are required.
 
 = Can I export as XLSX instead of CSV? =
 
@@ -83,6 +83,13 @@ Yes! Each Google Sheet can have its own Apps Script. They can all point to the s
 3. Activity logs showing upload history and status
 
 == Changelog ==
+
+= 1.4.0 =
+* Renamed plugin to "SFTP Sync for Google Sheets" for WordPress.org compliance
+* Fixed all escaping issues (using esc_html_e, esc_html__ throughout)
+* Fixed input sanitization for $_SERVER variables
+* Updated text domain to sftp-sync-for-google-sheets
+* Removed promotional language from descriptions
 
 = 1.3.1 =
 * Removed hidden files (.htaccess) for WordPress.org plugin directory compliance
@@ -120,6 +127,9 @@ Yes! Each Google Sheet can have its own Apps Script. They can all point to the s
 
 == Upgrade Notice ==
 
+= 1.4.0 =
+Renamed plugin for WordPress.org compliance. Fixed escaping and sanitization issues.
+
 = 1.3.1 =
 WordPress.org plugin directory compliance fixes.
 
@@ -133,4 +143,4 @@ Security improvements: Better password encryption and API rate limiting.
 New export settings! Configure schedule, filename mode, and format directly in the plugin.
 
 = 1.0.0 =
-Initial release of GSheet SFTP Sync.
+Initial release.

@@ -1,10 +1,10 @@
-# GSheet SFTP Sync
+# SFTP Sync for Google Sheets
 
 **Automatically export Google Sheets to your SFTP server daily or hourly.**
 
-A free WordPress plugin that receives Google Sheets exports via API and uploads them to any SFTP server. Perfect for automated inventory feeds, data syncs, and backups.
+A WordPress plugin that receives Google Sheets exports via API and uploads them to any SFTP server. Useful for automated inventory feeds, data syncs, and backups.
 
-![Version](https://img.shields.io/badge/version-1.3.1-blue)
+![Version](https://img.shields.io/badge/version-1.4.0-blue)
 ![License](https://img.shields.io/badge/license-GPL--2.0-green)
 ![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple)
 ![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue)
@@ -18,7 +18,7 @@ A free WordPress plugin that receives Google Sheets exports via API and uploads 
 - ✅ **Multiple Formats** – Export as CSV or XLSX
 - ✅ **Activity Logs** – Track all uploads and errors
 - ✅ **Pre-built Script** – Copy-paste Google Apps Script included
-- ✅ **100% Free** – No paid services required
+- ✅ **No paid services required** – Uses Google Apps Script and your SFTP server
 
 ## How It Works
 
@@ -41,7 +41,7 @@ Google Sheet → Apps Script (scheduled) → HTTP POST → WordPress Plugin → 
 
 ### Method 2: Manual
 1. Download/clone this repository
-2. Copy the `gsheet-sftp-sync` folder to `/wp-content/plugins/`
+2. Copy the `sftp-sync-for-google-sheets` folder to `/wp-content/plugins/`
 3. Activate via **Plugins** menu
 
 ---
@@ -50,7 +50,7 @@ Google Sheet → Apps Script (scheduled) → HTTP POST → WordPress Plugin → 
 
 ### Step 1: Activate & Configure the Plugin
 
-1. Go to **Settings → GSheet SFTP Sync**
+1. Go to **Settings → SFTP Sync**
 2. You'll see your auto-generated **API Key** and **Endpoint URL** at the top
 
 ### Step 2: Enter SFTP Credentials
@@ -148,7 +148,7 @@ The settings (schedule, filename mode, format, etc.) are embedded in the generat
 **Cause:** SFTP settings not saved in WordPress.
 
 **Fix:** 
-1. Go to Settings → GSheet SFTP Sync
+1. Go to Settings → SFTP Sync
 2. Enter all SFTP credentials
 3. Click Save Settings
 
@@ -157,7 +157,7 @@ The settings (schedule, filename mode, format, etc.) are embedded in the generat
 **Cause:** API key mismatch between Apps Script and WordPress.
 
 **Fix:**
-1. Go to Settings → GSheet SFTP Sync
+1. Go to Settings → SFTP Sync
 2. Copy the API Key shown at the top
 3. In Google Apps Script, update `CONFIG.API_KEY` with the new key
 4. Or re-copy the entire Apps Script code (recommended)
@@ -180,7 +180,7 @@ The settings (schedule, filename mode, format, etc.) are embedded in the generat
 
 **Fix (Option 1 - phpseclib):**
 ```bash
-cd /path/to/wp-content/plugins/gsheet-sftp-sync
+cd /path/to/wp-content/plugins/sftp-sync-for-google-sheets
 composer require phpseclib/phpseclib:~3.0
 ```
 
@@ -219,7 +219,7 @@ composer require phpseclib/phpseclib:~3.0
 
 If you suspect your API key is compromised:
 
-1. Go to Settings → GSheet SFTP Sync
+1. Go to Settings → SFTP Sync
 2. Click **Regenerate** next to the API Key
 3. **Important:** Re-copy the Apps Script code to your Google Sheet
 4. The old API key will stop working immediately
@@ -270,6 +270,13 @@ You can create multiple Apps Scripts in the same sheet, each pointing to a diffe
 ---
 
 ## Changelog
+
+### 1.4.0
+- Renamed plugin to "SFTP Sync for Google Sheets" for WordPress.org compliance
+- Fixed all escaping issues (using esc_html_e, esc_html__ throughout)
+- Fixed input sanitization for $_SERVER variables
+- Updated text domain to sftp-sync-for-google-sheets
+- Removed promotional language from descriptions
 
 ### 1.3.1
 - Removed hidden files (`.htaccess`, `.gitignore`) from distribution for WordPress.org plugin directory compliance

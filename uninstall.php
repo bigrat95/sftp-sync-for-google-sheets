@@ -1,8 +1,8 @@
 <?php
 /**
- * Uninstall GSheet SFTP Sync
+ * Uninstall SFTP Sync for Google Sheets
  *
- * @package GSheet_SFTP_Sync
+ * @package SFTP_Sync_GS
  * @author Olivier Bigras
  */
 
