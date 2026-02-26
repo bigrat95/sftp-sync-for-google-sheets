@@ -110,7 +110,7 @@ class SFTP_Sync_GS_API_Endpoint {
         // Check for base64 encoded content in JSON body
         if (!empty($body['file_content'])) {
             $file_content = base64_decode($body['file_content']);
-            $filename = $body['filename'] ?? 'export_' . date('Y-m-d_His') . '.csv';
+            $filename = $body['filename'] ?? 'export_' . gmdate('Y-m-d_His') . '.csv';
             
             if ($file_content === false) {
                 SFTP_Sync_GS::log('Failed to decode base64 file content', 'error');
@@ -132,7 +132,7 @@ class SFTP_Sync_GS_API_Endpoint {
             }
             
             $file_content = file_get_contents($_FILES['file']['tmp_name']);
-            $filename = $_FILES['file']['name'] ?? 'export_' . date('Y-m-d_His') . '.csv';
+            $filename = $_FILES['file']['name'] ?? 'export_' . gmdate('Y-m-d_His') . '.csv';
         }
         
         if (empty($file_content)) {

@@ -23,15 +23,18 @@ delete_option('gsheet_sftp_filename_mode');
 delete_option('gsheet_sftp_base_filename');
 delete_option('gsheet_sftp_export_format');
 
-// Delete log files from uploads directory
+// Delete log files from uploads directory using WP_Filesystem
 $upload_dir = wp_upload_dir();
 $log_dir = trailingslashit($upload_dir['basedir']) . 'sftp-sync-for-google-sheets/';
 if (is_dir($log_dir)) {
-    $files = glob($log_dir . '*');
-    foreach ($files as $file) {
-        if (is_file($file)) {
-            wp_delete_file($file);
-        }
+    // Initialize WP_Filesystem
+    global $wp_filesystem;
+    if ( ! function_exists( 'WP_Filesystem' ) ) {
+        require_once ABSPATH . 'wp-admin/includes/file.php';
     }
-    rmdir($log_dir);
+    WP_Filesystem();
+    
+    if ( $wp_filesystem ) {
+        $wp_filesystem->delete( $log_dir, true );
+    }
 }

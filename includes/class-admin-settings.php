@@ -275,8 +275,8 @@ class SFTP_Sync_GS_Admin_Settings {
                             <td>
                                 <select id="gsheet_sftp_daily_hour" name="gsheet_sftp_daily_hour">
                                     <?php for ($h = 0; $h < 24; $h++): ?>
-                                    <option value="<?php echo $h; ?>" <?php selected(get_option('gsheet_sftp_daily_hour', 2), $h); ?>>
-                                        <?php echo sprintf('%02d:00', $h); ?>
+                                    <option value="<?php echo esc_attr( $h ); ?>" <?php selected(get_option('gsheet_sftp_daily_hour', 2), $h); ?>>
+                                        <?php echo esc_html( sprintf('%02d:00', $h) ); ?>
                                     </option>
                                     <?php endfor; ?>
                                 </select>
@@ -353,7 +353,7 @@ class SFTP_Sync_GS_Admin_Settings {
                             } elseif (strpos($log, '[success]') !== false) {
                                 $class = 'log-success';
                             }
-                            echo '<div class="' . $class . '">' . esc_html($log) . '</div>';
+                            echo '<div class="' . esc_attr( $class ) . '">' . esc_html($log) . '</div>';
                         }
                     }
                     ?>
