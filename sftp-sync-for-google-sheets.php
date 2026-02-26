@@ -3,7 +3,7 @@
  * Plugin Name: SFTP Sync for Google Sheets
  * Plugin URI: https://github.com/bigrat95/sftp-sync-for-google-sheets/
  * Description: Receive Google Sheets exports via API and upload to SFTP server. Automate daily syncs from Google Sheets to your server.
- * Version: 1.4.0
+ * Version: 1.5.0
  * Requires at least: 5.0
  * Requires PHP: 7.4
  * Author: Olivier Bigras
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('SFTP_SYNC_GS_VERSION', '1.4.0');
+define('SFTP_SYNC_GS_VERSION', '1.5.0');
 define('SFTP_SYNC_GS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SFTP_SYNC_GS_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -59,10 +59,20 @@ class SFTP_Sync_GS {
             update_option('gsheet_sftp_api_key', wp_generate_password(32, false));
         }
         
-        // Create logs directory
-        $log_dir = SFTP_SYNC_GS_PLUGIN_DIR . 'logs';
+        // Create logs directory in uploads folder (not in plugin directory)
+        $log_dir = self::get_log_directory();
         if (!file_exists($log_dir)) {
             wp_mkdir_p($log_dir);
+            // Add .htaccess to protect log files
+            $htaccess = $log_dir . '.htaccess';
+            if (!file_exists($htaccess)) {
+                file_put_contents($htaccess, 'Deny from all');
+            }
+            // Add index.php for extra security
+            $index = $log_dir . 'index.php';
+            if (!file_exists($index)) {
+                file_put_contents($index, '<?php // Silence is golden');
+            }
         }
         
         flush_rewrite_rules();
@@ -107,8 +117,30 @@ class SFTP_Sync_GS {
         ');
     }
     
+    /**
+     * Get the log directory path in wp-content/uploads.
+     */
+    public static function get_log_directory() {
+        $upload_dir = wp_upload_dir();
+        return trailingslashit($upload_dir['basedir']) . 'sftp-sync-for-google-sheets/';
+    }
+    
+    /**
+     * Get the log file path.
+     */
+    public static function get_log_file() {
+        return self::get_log_directory() . 'sync.log';
+    }
+    
     public static function log($message, $type = 'info') {
-        $log_file = SFTP_SYNC_GS_PLUGIN_DIR . 'logs/sync.log';
+        $log_dir = self::get_log_directory();
+        
+        // Ensure directory exists
+        if (!file_exists($log_dir)) {
+            wp_mkdir_p($log_dir);
+        }
+        
+        $log_file = self::get_log_file();
         $timestamp = current_time('Y-m-d H:i:s');
         $log_entry = "[{$timestamp}] [{$type}] {$message}\n";
         file_put_contents($log_file, $log_entry, FILE_APPEND | LOCK_EX);
@@ -122,7 +154,7 @@ class SFTP_Sync_GS {
     }
     
     public static function get_logs($limit = 50) {
-        $log_file = SFTP_SYNC_GS_PLUGIN_DIR . 'logs/sync.log';
+        $log_file = self::get_log_file();
         if (!file_exists($log_file)) {
             return [];
         }

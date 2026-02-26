@@ -102,18 +102,10 @@ class SFTP_Sync_GS_Handler {
     }
     
     private function upload_via_phpseclib($file_content, $filename, $config, $remote_path) {
-        // Try to load phpseclib
-        $autoload_paths = [
-            SFTP_SYNC_GS_PLUGIN_DIR . 'vendor/autoload.php',
-            ABSPATH . 'vendor/autoload.php',
-            WP_CONTENT_DIR . '/vendor/autoload.php',
-        ];
-        
-        foreach ($autoload_paths as $path) {
-            if (file_exists($path)) {
-                require_once $path;
-                break;
-            }
+        // Try to load phpseclib from plugin's vendor directory
+        $autoload_path = SFTP_SYNC_GS_PLUGIN_DIR . 'vendor/autoload.php';
+        if (file_exists($autoload_path)) {
+            require_once $autoload_path;
         }
         
         // Try phpseclib3
@@ -232,17 +224,10 @@ class SFTP_Sync_GS_Handler {
             ];
         }
         
-        // Try phpseclib
-        $autoload_paths = [
-            SFTP_SYNC_GS_PLUGIN_DIR . 'vendor/autoload.php',
-            ABSPATH . 'vendor/autoload.php',
-        ];
-        
-        foreach ($autoload_paths as $path) {
-            if (file_exists($path)) {
-                require_once $path;
-                break;
-            }
+        // Try phpseclib from plugin's vendor directory
+        $autoload_path = SFTP_SYNC_GS_PLUGIN_DIR . 'vendor/autoload.php';
+        if (file_exists($autoload_path)) {
+            require_once $autoload_path;
         }
         
         if (class_exists('phpseclib3\Net\SFTP')) {

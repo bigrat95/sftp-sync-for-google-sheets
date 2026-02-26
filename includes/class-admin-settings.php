@@ -14,6 +14,39 @@ class SFTP_Sync_GS_Admin_Settings {
         return self::$instance;
     }
     
+    /**
+     * Enqueue admin scripts properly using WordPress functions.
+     */
+    private function enqueue_admin_scripts() {
+        wp_register_script(
+            'sftp-sync-gs-admin',
+            false,
+            [],
+            SFTP_SYNC_GS_VERSION,
+            ['in_footer' => true]
+        );
+        
+        $inline_script = "
+            document.addEventListener('DOMContentLoaded', function() {
+                var scheduleSelect = document.getElementById('gsheet_sftp_schedule');
+                var dailyHourRow = document.getElementById('daily-hour-row');
+                
+                if (scheduleSelect && dailyHourRow) {
+                    scheduleSelect.addEventListener('change', function() {
+                        dailyHourRow.style.display = this.value === 'daily' ? '' : 'none';
+                    });
+                    
+                    if (scheduleSelect.value !== 'daily') {
+                        dailyHourRow.style.display = 'none';
+                    }
+                }
+            });
+        ";
+        
+        wp_add_inline_script('sftp-sync-gs-admin', $inline_script);
+        wp_enqueue_script('sftp-sync-gs-admin');
+    }
+    
     public function register_settings() {
         // API Settings
         register_setting('gsheet_sftp_settings', 'gsheet_sftp_api_key', [
@@ -110,6 +143,9 @@ class SFTP_Sync_GS_Admin_Settings {
             return;
         }
         
+        // Enqueue admin script for schedule toggle
+        $this->enqueue_admin_scripts();
+        
         // Handle test connection
         if (isset($_POST['test_sftp_connection']) && check_admin_referer('gsheet_sftp_test_connection')) {
             $this->test_connection();
@@ -123,9 +159,9 @@ class SFTP_Sync_GS_Admin_Settings {
         
         // Handle clear logs
         if (isset($_POST['clear_logs']) && check_admin_referer('gsheet_sftp_clear_logs')) {
-            $log_file = SFTP_SYNC_GS_PLUGIN_DIR . 'logs/sync.log';
+            $log_file = SFTP_Sync_GS::get_log_file();
             if (file_exists($log_file)) {
-                unlink($log_file);
+                wp_delete_file($log_file);
             }
             echo '<div class="notice notice-success"><p>' . esc_html__('Logs cleared!', 'sftp-sync-for-google-sheets') . '</p></div>';
         }
@@ -284,14 +320,6 @@ class SFTP_Sync_GS_Admin_Settings {
                 <?php submit_button(esc_html__('Save Settings', 'sftp-sync-for-google-sheets')); ?>
             </form>
             
-            <script>
-            document.getElementById('gsheet_sftp_schedule').addEventListener('change', function() {
-                document.getElementById('daily-hour-row').style.display = this.value === 'daily' ? '' : 'none';
-            });
-            if (document.getElementById('gsheet_sftp_schedule').value !== 'daily') {
-                document.getElementById('daily-hour-row').style.display = 'none';
-            }
-            </script>
             
             <div class="gsheet-sftp-section">
                 <h2><?php esc_html_e('Test Connection', 'sftp-sync-for-google-sheets'); ?></h2>
