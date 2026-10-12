@@ -3,7 +3,7 @@
  * Plugin Name: SFTP Sync for Google Sheets
  * Plugin URI: https://github.com/bigrat95/sftp-sync-for-google-sheets/
  * Description: Receive Google Sheets exports via API and upload to SFTP server. Automate daily syncs from Google Sheets to your server.
- * Version: 1.5.2
+ * Version: 1.5.3
  * Requires at least: 5.0
  * Requires PHP: 7.4
  * Author: Olivier Bigras
@@ -17,9 +17,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('SFTP_SYNC_GS_VERSION', '1.5.2');
+define('SFTP_SYNC_GS_VERSION', '1.5.3');
 define('SFTP_SYNC_GS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SFTP_SYNC_GS_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('SFTP_SYNC_GS_DONATE_URL', 'https://www.paypal.com/donate/?hosted_button_id=29SAPKFAHMTNW');
+define('SFTP_SYNC_GS_BASENAME', plugin_basename(__FILE__));
 
 class SFTP_Sync_GS {
     
@@ -51,6 +53,103 @@ class SFTP_Sync_GS {
         add_action('admin_init', [$this, 'register_settings']);
         add_action('rest_api_init', [$this, 'register_rest_routes']);
         add_action('admin_enqueue_scripts', [$this, 'admin_styles']);
+        add_filter('plugin_action_links_' . SFTP_SYNC_GS_BASENAME, [$this, 'plugin_action_links']);
+        add_filter('plugin_row_meta', [$this, 'plugin_row_meta'], 10, 2);
+        add_action('admin_notices', [$this, 'donate_notice']);
+        add_action('wp_ajax_sftp_sync_gs_dismiss_donate', [$this, 'ajax_dismiss_donate']);
+    }
+
+    /**
+     * Settings + Donate on the Plugins screen.
+     *
+     * @param string[] $links Links.
+     * @return string[]
+     */
+    public function plugin_action_links($links) {
+        $settings = '<a href="' . esc_url(admin_url('options-general.php?page=sftp-sync-for-google-sheets')) . '">' . esc_html__('Settings', 'sftp-sync-for-google-sheets') . '</a>';
+        $donate   = '<a href="' . esc_url(SFTP_SYNC_GS_DONATE_URL) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Donate', 'sftp-sync-for-google-sheets') . '</a>';
+        array_unshift($links, $settings, $donate);
+        return $links;
+    }
+
+    /**
+     * Donate in plugin meta row.
+     *
+     * @param string[] $links Links.
+     * @param string   $file  Basename.
+     * @return string[]
+     */
+    public function plugin_row_meta($links, $file) {
+        if ($file !== SFTP_SYNC_GS_BASENAME) {
+            return $links;
+        }
+        $links[] = '<a href="' . esc_url(SFTP_SYNC_GS_DONATE_URL) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Donate', 'sftp-sync-for-google-sheets') . '</a>';
+        return $links;
+    }
+
+    /**
+     * Dismissible support notice on the settings screen.
+     */
+    public function donate_notice() {
+        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+        if (!$screen || $screen->id !== 'settings_page_sftp-sync-for-google-sheets') {
+            return;
+        }
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        if (get_user_meta(get_current_user_id(), 'sftp_sync_gs_donate_dismissed', true)) {
+            return;
+        }
+        ?>
+        <div class="notice notice-info is-dismissible sftp-sync-gs-donate-notice">
+            <p>
+                <?php
+                echo wp_kses(
+                    sprintf(
+                        /* translators: %s: donate URL */
+                        __('Enjoying SFTP Sync for Google Sheets? <a href="%s" target="_blank" rel="noopener noreferrer">Buy me a coffee</a> — your support keeps the plugin free and maintained.', 'sftp-sync-for-google-sheets'),
+                        esc_url(SFTP_SYNC_GS_DONATE_URL)
+                    ),
+                    [
+                        'a' => [
+                            'href'   => true,
+                            'target' => true,
+                            'rel'    => true,
+                        ],
+                    ]
+                );
+                ?>
+            </p>
+        </div>
+        <script>
+        (function () {
+            var notice = document.querySelector('.sftp-sync-gs-donate-notice');
+            if (!notice || typeof sftpSyncGs === 'undefined') return;
+            notice.addEventListener('click', function (e) {
+                if (!e.target.classList.contains('notice-dismiss')) return;
+                var body = new FormData();
+                body.append('action', 'sftp_sync_gs_dismiss_donate');
+                body.append('nonce', sftpSyncGs.donateNonce || '');
+                if (window.fetch) {
+                    fetch(sftpSyncGs.ajaxUrl, { method: 'POST', body: body, credentials: 'same-origin' });
+                }
+            });
+        })();
+        </script>
+        <?php
+    }
+
+    /**
+     * Persist donate notice dismissal.
+     */
+    public function ajax_dismiss_donate() {
+        check_ajax_referer('sftp_sync_gs_donate', 'nonce');
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(null, 403);
+        }
+        update_user_meta(get_current_user_id(), 'sftp_sync_gs_donate_dismissed', 1);
+        wp_send_json_success();
     }
     
     public function activate() {
@@ -104,6 +203,12 @@ class SFTP_Sync_GS {
         if ($hook !== 'settings_page_sftp-sync-for-google-sheets') {
             return;
         }
+        wp_register_script('sftp-sync-gs-admin', false, [], SFTP_SYNC_GS_VERSION, true);
+        wp_enqueue_script('sftp-sync-gs-admin');
+        wp_localize_script('sftp-sync-gs-admin', 'sftpSyncGs', [
+            'ajaxUrl'     => admin_url('admin-ajax.php'),
+            'donateNonce' => wp_create_nonce('sftp_sync_gs_donate'),
+        ]);
         wp_add_inline_style('wp-admin', '
             .gsheet-sftp-wrap { max-width: 800px; }
             .gsheet-sftp-wrap .form-table th { width: 200px; }

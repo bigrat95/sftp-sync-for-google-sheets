@@ -1,11 +1,11 @@
 === SFTP Sync for Google Sheets ===
 Contributors: bigrat95
-Donate link: https://olivierbigras.com
+Donate link: https://www.paypal.com/donate/?hosted_button_id=29SAPKFAHMTNW
 Plugin URI: https://olivierbigras.com
 Tags: google sheets, sftp, sync, automation, csv
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.5.2
+Stable tag: 1.5.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -84,6 +84,9 @@ Yes! Each Google Sheet can have its own Apps Script. They can all point to the s
 
 == Changelog ==
 
+= 1.5.3 =
+* NEW: Settings and Donate links on the Plugins screen, optional support notice on the settings screen, footer donation link, and Donate link updated to PayPal on the WordPress.org plugin page
+
 = 1.5.2 =
 * Fixed Save Settings wiping the API key, which caused Google Apps Script exports to return 401 rest_forbidden
 * Google Apps Script now also sends the API key in the request body as a fallback
@@ -141,6 +144,9 @@ Yes! Each Google Sheet can have its own Apps Script. They can all point to the s
 * Google Apps Script generator
 
 == Upgrade Notice ==
+
+= 1.5.3 =
+Adds Donate / support links (Plugins screen, settings notice, PayPal Donate link on WordPress.org).
 
 = 1.5.2 =
 Fixes Save Settings wiping the API key (401 errors from Google Apps Script). After updating, copy the current API key into your Apps Script.

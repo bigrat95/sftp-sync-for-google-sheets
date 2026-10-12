@@ -444,6 +444,25 @@ class SFTP_Sync_GS_Admin_Settings {
                 </a></p>
                 <textarea id="apps-script-code" style="display:none; width:100%; height:400px; font-family:monospace; font-size:12px;" readonly><?php echo esc_textarea($this->get_apps_script_template()); ?></textarea>
             </div>
+
+            <p class="description" style="margin-top:20px;">
+                <?php
+                echo wp_kses(
+                    sprintf(
+                        /* translators: %s: donate URL */
+                        __('If this plugin helps you, please consider a <a href="%s" target="_blank" rel="noopener noreferrer">donation</a>. Thank you!', 'sftp-sync-for-google-sheets'),
+                        esc_url(SFTP_SYNC_GS_DONATE_URL)
+                    ),
+                    [
+                        'a' => [
+                            'href'   => true,
+                            'target' => true,
+                            'rel'    => true,
+                        ],
+                    ]
+                );
+                ?>
+            </p>
         </div>
         <?php
     }
